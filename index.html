@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SchulHilfe – Dein smarter Lernbegleiter</title>
+<style>
+:root{
+  --bg:#f6f8fc;--card:#fff;--text:#172033;--muted:#6b7280;--primary:#5b5cf0;
+  --primary2:#7c3aed;--border:#e6e8f0;--success:#16a34a;--shadow:0 12px 35px rgba(31,41,55,.08);
+}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text)}
+button,input,textarea,select{font:inherit} button{cursor:pointer;border:0}
+.app{display:flex;min-height:100vh}.sidebar{width:250px;background:#111827;color:#fff;padding:24px 16px;position:fixed;inset:0 auto 0 0}
+.logo{font-size:23px;font-weight:800;padding:8px 12px 25px}.logo span{color:#8b8dfc}
+.nav button{width:100%;padding:12px 14px;margin:3px 0;border-radius:10px;background:transparent;color:#cbd5e1;text-align:left}
+.nav button:hover,.nav button.active{background:#262d43;color:#fff}.nav button span{margin-right:10px}
+.main{margin-left:250px;width:calc(100% - 250px);padding:28px 34px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}
+.top h1{margin:0;font-size:28px}.badge{background:#e9e9ff;color:#4f46e5;padding:8px 12px;border-radius:999px;font-size:13px;font-weight:700}
+.view{display:none}.view.active{display:block}
+.hero{background:linear-gradient(135deg,#5b5cf0,#7c3aed);color:#fff;border-radius:22px;padding:30px;box-shadow:var(--shadow)}
+.hero h2{font-size:30px;margin:0 0 8px}.hero p{opacity:.9;margin:0 0 20px}.hero .btn{background:#fff;color:#4f46e5}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:20px}.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px;box-shadow:var(--shadow)}
+.card h3{margin:0 0 8px}.muted{color:var(--muted)}.big{font-size:29px;font-weight:800}
+.btn{background:var(--primary);color:#fff;padding:11px 16px;border-radius:10px;font-weight:700}.btn.secondary{background:#eef0ff;color:#4f46e5}
+.row{display:flex;gap:10px;align-items:center}.row>*{flex:1}
+input,textarea,select{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;background:#fff;outline:none}textarea{min-height:130px;resize:vertical}
+.chat{height:430px;display:flex;flex-direction:column}.messages{flex:1;overflow:auto;padding:4px}.msg{max-width:78%;padding:11px 14px;border-radius:14px;margin:8px 0;line-height:1.45}.user{margin-left:auto;background:#5b5cf0;color:#fff}.ai{background:#f0f2f7}
+.chatbar{display:flex;gap:8px;margin-top:10px}.chatbar input{flex:1}
+.calc{max-width:390px}.screen{font-size:30px;text-align:right;background:#111827;color:#fff;padding:18px;border-radius:14px;margin-bottom:10px;min-height:70px;overflow:auto}
+.keys{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.keys button{padding:16px;border-radius:10px;background:#eef0f5}.keys button.op{background:#dedfff;color:#4f46e5;font-weight:800}.keys button.equal{background:#5b5cf0;color:#fff}
+.notes{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.note{padding:16px;border-radius:14px;background:#fff;border:1px solid var(--border)}
+.progress{height:9px;background:#edf0f5;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;background:#5b5cf0;border-radius:99px}
+@media(max-width:850px){.sidebar{width:72px;padding:18px 8px}.logo{font-size:0}.logo span{font-size:20px}.nav button{font-size:0;text-align:center}.nav button span{font-size:18px;margin:0}.main{margin-left:72px;width:calc(100% - 72px);padding:20px}.grid,.notes{grid-template-columns:1fr}.top h1{font-size:22px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="logo">📚 <span>SchulHilfe</span></div>
+  <nav class="nav">
+    <button class="active" data-view="home"><span>🏠</span>Startseite</button>
+    <button data-view="ai"><span>🤖</span>KI-Lernhilfe</button>
+    <button data-view="calc"><span>🧮</span>Taschenrechner</button>
+    <button data-view="notes"><span>📝</span>Notizen</button>
+    <button data-view="timer"><span>⏱️</span>Lerntimer</button>
+    <button data-view="flash"><span>🧠</span>Karteikarten</button>
+    <button data-view="tasks"><span>✅</span>Aufgaben</button>
+  </nav>
+</aside>
+
+<main class="main">
+<div class="top"><h1 id="title">Willkommen zurück 👋</h1><div class="badge">Kostenlos lernen</div></div>
+
+<section id="home" class="view active">
+  <div class="hero"><h2>Deine Schule. Deine Tools. Deine KI.</h2><p>Alles an einem Ort: Hausaufgaben verstehen, rechnen, lernen, planen und organisieren.</p><button class="btn" onclick="show('ai')">Mit der KI lernen →</button></div>
+  <div class="grid">
+    <div class="card"><h3>🤖 KI-Lernhilfe</h3><p class="muted">Erklärungen, Zusammenfassungen und Lernfragen.</p><button class="btn secondary" onclick="show('ai')">Öffnen</button></div>
+    <div class="card"><h3>🧮 Taschenrechner</h3><p class="muted">Schnell und bequem rechnen.</p><button class="btn secondary" onclick="show('calc')">Rechnen</button></div>
+    <div class="card"><h3>⏱️ Fokuszeit</h3><p class="muted">25 Minuten konzentriert lernen.</p><button class="btn secondary" onclick="show('timer')">Timer starten</button></div>
+  </div>
+  <div class="card" style="margin-top:20px"><h3>Dein Lernfortschritt</h3><p class="muted">Diese Woche</p><div class="progress"><i style="width:68%"></i></div><p><b>68%</b> deines Wochenziels erreicht</p></div>
+</section>
+
+<section id="ai" class="view">
+  <div class="card chat"><h3>🤖 SchulHilfe KI</h3><div class="messages" id="messages"><div class="msg ai">Hallo! 👋 Ich bin deine Lern-KI. Frag mich z. B. „Erkläre mir Brüche einfach“ oder „Fasse diesen Text zusammen“.</div></div>
+  <div class="chatbar"><input id="chatInput" placeholder="Was möchtest du lernen?" onkeydown="if(event.key==='Enter')send()"><button class="btn" onclick="send()">Senden</button></div></div>
+</section>
+
+<section id="calc" class="view">
+  <div class="card calc"><h3>🧮 Taschenrechner</h3><div class="screen" id="screen">0</div><div class="keys">
+    <button onclick="clr()">C</button><button onclick="back()">⌫</button><button class="op" onclick="add('%')">%</button><button class="op" onclick="add('/')">÷</button>
+    <button onclick="add('7')">7</button><button onclick="add('8')">8</button><button onclick="add('9')">9</button><button class="op" onclick="add('*')">×</button>
+    <button onclick="add('4')">4</button><button onclick="add('5')">5</button><button onclick="add('6')">6</button><button class="op" onclick="add('-')">−</button>
+    <button onclick="add('1')">1</button><button onclick="add('2')">2</button><button onclick="add('3')">3</button><button class="op" onclick="add('+')">+</button>
+    <button onclick="add('0')">0</button><button onclick="add('.')">.</button><button class="equal" style="grid-column:span 2" onclick="calc()">=</button>
+  </div></div>
+</section>
+
+<section id="notes" class="view">
+  <div class="card"><h3>📝 Neue Notiz</h3><div class="row"><input id="noteTitle" placeholder="Titel"><button class="btn" onclick="addNote()">Speichern</button></div><textarea id="noteText" placeholder="Schreibe deine Notiz..."></textarea></div>
+  <div class="notes" id="notesList" style="margin-top:18px"></div>
+</section>
+
+<section id="timer" class="view">
+  <div class="card" style="max-width:520px;text-align:center"><h3>⏱️ Lerntimer</h3><div class="big" id="timerDisplay" style="font-size:70px;margin:20px">25:00</div><div class="row"><button class="btn" onclick="startTimer()">Start</button><button class="btn secondary" onclick="pauseTimer()">Pause</button><button class="btn secondary" onclick="resetTimer()">Reset</button></div></div>
+</section>
+
+<section id="flash" class="view">
+  <div class="card"><h3>🧠 Karteikarten</h3><p class="muted">Teste dich selbst.</p><div id="flashCard" class="hero" style="text-align:center;cursor:pointer" onclick="flipCard()"><h2 id="flashText">Was ist die Hauptstadt von Frankreich?</h2><p>Klicken zum Umdrehen</p></div><div class="row" style="margin-top:14px"><button class="btn secondary" onclick="prevCard()">← Zurück</button><button class="btn" onclick="nextCard()">Nächste →</button></div></div>
+</section>
+
+<section id="tasks" class="view">
+  <div class="card"><h3>✅ Aufgaben</h3><div class="row"><input id="taskInput" placeholder="Neue Aufgabe, z. B. Mathe lernen"><button class="btn" onclick="addTask()">Hinzufügen</button></div><div id="taskList" style="margin-top:15px"></div></div>
+</section>
+</main></div>
+
+<script>
+const titles={home:'Willkommen zurück 👋',ai:'KI-Lernhilfe',calc:'Taschenrechner',notes:'Meine Notizen',timer:'Lerntimer',flash:'Karteikarten',tasks:'Meine Aufgaben'};
+function show(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===id));document.getElementById('title').textContent=titles[id]}
+document.querySelectorAll('.nav button').forEach(b=>b.onclick=()=>show(b.dataset.view));
+
+function send(){let i=document.getElementById('chatInput'),t=i.value.trim();if(!t)return;let m=document.getElementById('messages');m.innerHTML+=`<div class="msg user">${escapeHtml(t)}</div>`;i.value='';setTimeout(()=>{let r='Gute Frage! Ich kann dir dabei helfen. In dieser Demo ist die KI noch nicht mit einem echten KI-API verbunden. Für eine echte Version kann hier z. B. eine OpenAI-API angebunden werden.';if(/bruch|mathe|rechnung/i.test(t))r='Tipp: Zerlege die Aufgabe in kleine Schritte. Schreib zuerst auf, was gegeben ist und was gesucht wird. Danach wählen wir die passende Formel.';m.innerHTML+=`<div class="msg ai">${r}</div>`;m.scrollTop=m.scrollHeight},450)}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+
+let expr='';function add(x){expr+=x;document.getElementById('screen').textContent=expr.replace('*','×').replace('/','÷')}function clr(){expr='';document.getElementById('screen').textContent='0'}function back(){expr=expr.slice(0,-1);document.getElementById('screen').textContent=expr||'0'}function calc(){try{if(!/^[0-9+*/%.() -]+$/.test(expr))throw 0;expr=String(Function('return '+expr)());document.getElementById('screen').textContent=expr}catch{document.getElementById('screen').textContent='Fehler';expr=''}}
+
+let seconds=1500,interval=null;function renderTimer(){let m=String(Math.floor(seconds/60)).padStart(2,'0'),s=String(seconds%60).padStart(2,'0');document.getElementById('timerDisplay').textContent=m+':'+s}function startTimer(){if(interval)return;interval=setInterval(()=>{if(seconds>0){seconds--;renderTimer()}else{clearInterval(interval);interval=null;alert('Lernzeit geschafft! 🎉')}},1000)}function pauseTimer(){clearInterval(interval);interval=null}function resetTimer(){pauseTimer();seconds=1500;renderTimer()}
+
+let notes=JSON.parse(localStorage.getItem('sh_notes')||'[]');function drawNotes(){document.getElementById('notesList').innerHTML=notes.map((n,i)=>`<div class="note"><b>${escapeHtml(n.t)}</b><p>${escapeHtml(n.x)}</p><button class="btn secondary" onclick="delNote(${i})">Löschen</button></div>`).join('')}function addNote(){let t=document.getElementById('noteTitle').value.trim(),x=document.getElementById('noteText').value.trim();if(!t&&!x)return;notes.unshift({t:t||'Notiz',x});localStorage.setItem('sh_notes',JSON.stringify(notes));document.getElementById('noteTitle').value='';document.getElementById('noteText').value='';drawNotes()}function delNote(i){notes.splice(i,1);localStorage.setItem('sh_notes',JSON.stringify(notes));drawNotes()}drawNotes();
+
+let tasks=JSON.parse(localStorage.getItem('sh_tasks')||'[]');function drawTasks(){document.getElementById('taskList').innerHTML=tasks.map((t,i)=>`<div class="row" style="padding:10px 0;border-bottom:1px solid var(--border)"><label style="display:flex;gap:10px;align-items:center"><input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${i})" style="width:auto"><span style="${t.done?'text-decoration:line-through;color:#9ca3af':''}">${escapeHtml(t.x)}</span></label><button class="btn secondary" onclick="delTask(${i})">✕</button></div>`).join('')}function addTask(){let i=document.getElementById('taskInput'),x=i.value.trim();if(!x)return;tasks.push({x,done:false});i.value='';saveTasks()}function toggleTask(i){tasks[i].done=!tasks[i].done;saveTasks()}function delTask(i){tasks.splice(i,1);saveTasks()}function saveTasks(){localStorage.setItem('sh_tasks',JSON.stringify(tasks));drawTasks()}drawTasks();
+
+const cards=[['Was ist die Hauptstadt von Frankreich?','Paris'],['Was ist 7 × 8?','56'],['Was bedeutet „photosynthesis“?','Fotosynthese: Pflanzen wandeln Lichtenergie in chemische Energie um.']];let ci=0,front=true;function flipCard(){front=!front;document.getElementById('flashText').textContent=cards[ci][front?0:1]}function nextCard(){ci=(ci+1)%cards.length;front=true;document.getElementById('flashText').textContent=cards[ci][0]}function prevCard(){ci=(ci-1+cards.length)%cards.length;front=true;document.getElementById('flashText').textContent=cards[ci][0]}
+</script>
+</body>
+</html>
