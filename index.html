@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#111827" />
+  <meta name="description" content="DayFlow – dein persönlicher Tagesplaner im Browser." />
+  <title>DayFlow – Dein Tagesablauf</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">D</div>
+        <div>
+          <strong>DayFlow</strong>
+          <span>dein Tag. dein Flow.</span>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-item active" data-view="today"><span>☀</span> Heute</button>
+        <button class="nav-item" data-view="habits"><span>↻</span> Gewohnheiten</button>
+        <button class="nav-item" data-view="notes"><span>✎</span> Notizen</button>
+        <button class="nav-item" data-view="stats"><span>▥</span> Statistik</button>
+        <button class="nav-item" data-view="profile"><span>◎</span> Mein Profil</button>
+      </nav>
+
+      <div class="sidebar-card">
+        <span class="eyebrow">Tagesziel</span>
+        <div class="progress-ring" id="goalRing"><b id="goalPercent">0%</b></div>
+        <p>Du hast schon <strong id="goalDone">0</strong> von <strong id="goalTotal">0</strong> Aufgaben erledigt.</p>
+      </div>
+
+      <div class="sidebar-bottom">
+        <button class="ghost-btn" id="themeBtn">◐ <span>Design wechseln</span></button>
+        <button class="ghost-btn" id="exportBtn">↓ <span>Daten exportieren</span></button>
+        <label class="ghost-btn import-label">↑ <span>Importieren</span><input type="file" id="importInput" accept="application/json" hidden></label>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <div class="eyebrow" id="greeting">Guten Abend</div>
+          <h1 id="pageTitle">Dein Tagesablauf</h1>
+          <p class="date-line" id="currentDate"></p>
+        </div>
+        <div class="top-actions">
+          <button class="icon-btn" id="focusBtn" title="Fokusmodus">⏱</button>
+          <button class="primary-btn" id="addTaskBtn">＋ Aufgabe</button>
+        </div>
+      </header>
+
+      <section id="view-today" class="view active-view">
+        <div class="hero-grid">
+          <div class="hero-card">
+            <div class="hero-copy">
+              <span class="eyebrow">Dein Flow</span>
+              <h2>Plane weniger.<br><em>Mach mehr.</em></h2>
+              <p>Pack deinen Tag in klare Blöcke und behalte den Kopf frei.</p>
+            </div>
+            <div class="hero-clock" id="liveClock">20:21</div>
+          </div>
+          <div class="mini-card quote-card">
+            <span class="quote-mark">“</span>
+            <p id="quoteText">Ein guter Tag beginnt nicht mit mehr Aufgaben, sondern mit den richtigen.</p>
+            <small>DayFlow Reminder</small>
+          </div>
+        </div>
+
+        <div class="section-head">
+          <div><span class="eyebrow">Zeitplan</span><h3>Heute</h3></div>
+          <div class="date-nav"><button class="icon-btn" id="prevDay">‹</button><button class="date-pill" id="datePill">Heute</button><button class="icon-btn" id="nextDay">›</button></div>
+        </div>
+
+        <div class="timeline" id="timeline"></div>
+
+        <div class="quick-grid">
+          <section class="panel">
+            <div class="panel-head"><div><span class="eyebrow">Schnellzugriff</span><h3>Ideen & Listen</h3></div></div>
+            <div class="idea-buttons">
+              <button class="idea" data-idea="meal">🥗 Essensplan</button>
+              <button class="idea" data-idea="shopping">🛒 Einkaufsliste</button>
+              <button class="idea" data-idea="project">🚀 Projekt-Milestone</button>
+              <button class="idea" data-idea="gratitude">💭 Dankbarkeit</button>
+              <button class="idea" data-idea="brain">🧠 Brain Dump</button>
+              <button class="idea" data-idea="weekly">📅 Wochenreview</button>
+            </div>
+          </section>
+          <section class="panel">
+            <div class="panel-head"><div><span class="eyebrow">Heute wichtig</span><h3>Top 3</h3></div></div>
+            <div id="topThree" class="top-three"></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="view-habits" class="view">
+        <div class="section-head"><div><span class="eyebrow">Routinen</span><h3>Gewohnheiten</h3><p class="subtle">Kleine Dinge, große Wirkung.</p></div><button class="primary-btn" id="addHabitBtn">＋ Gewohnheit</button></div>
+        <div id="habitsGrid" class="habits-grid"></div>
+      </section>
+
+      <section id="view-notes" class="view">
+        <div class="section-head"><div><span class="eyebrow">Gedanken</span><h3>Notizen</h3><p class="subtle">Alles raus aus dem Kopf und aufs Papier.</p></div><button class="primary-btn" id="addNoteBtn">＋ Notiz</button></div>
+        <div id="notesGrid" class="notes-grid"></div>
+      </section>
+
+
+      <section id="view-profile" class="view">
+        <div class="section-head"><div><span class="eyebrow">Persönlich</span><h3>Mein Profil & Empfehlungen</h3><p class="subtle">Gib ein paar Basisdaten ein, damit DayFlow deinen Alltag besser auf dich zuschneiden kann.</p></div></div>
+        <div class="profile-grid">
+          <section class="panel">
+            <div class="panel-head"><div><span class="eyebrow">Basisdaten</span><h3>Dein Profil</h3></div></div>
+            <form id="profileForm" class="profile-form">
+              <label>Name<input id="profileName" placeholder="z. B. Alex" /></label>
+              <div class="form-row"><label>Alter<input id="profileAge" type="number" min="13" max="120" placeholder="25" /></label><label>Gewicht (kg)<input id="profileWeight" type="number" min="30" max="300" step="0.1" placeholder="70" /></label></div>
+              <div class="form-row"><label>Größe (cm)<input id="profileHeight" type="number" min="120" max="230" placeholder="175" /></label><label>Schlaf (h)<input id="profileSleep" type="number" min="0" max="16" step="0.5" placeholder="8" /></label></div>
+              <div class="form-row"><label>Aktivitätslevel<select id="profileActivity"><option value="low">Eher ruhig</option><option value="medium" selected>Normal aktiv</option><option value="high">Sehr aktiv</option></select></label><label>Ziel<select id="profileGoal"><option value="balance">Mehr Balance</option><option value="fitness">Fitness & Bewegung</option><option value="focus">Fokus & Produktivität</option><option value="recovery">Erholung & Schlaf</option></select></label></div>
+              <button class="primary-btn wide" type="submit">Empfehlungen aktualisieren</button>
+              <div class="small-note">Die Angaben bleiben lokal in deinem Browser. Empfehlungen sind allgemeine Lifestyle-Ideen und ersetzen keine medizinische Beratung.</div>
+            </form>
+          </section>
+          <section class="panel"><div class="panel-head"><div><span class="eyebrow">Überblick</span><h3 id="profileHello">Dein Profil</h3></div></div><div id="profileSummary" class="profile-summary"></div></section>
+        </div>
+        <section class="panel">
+          <div class="panel-head"><div><span class="eyebrow">DayFlow Coach</span><h3>Vorschläge für deinen Tag</h3><p class="subtle">Auf Basis deiner Angaben – praktisch statt kompliziert.</p></div></div>
+          <div id="suggestionGrid" class="suggestion-grid"></div>
+        </section>
+      </section>
+
+      <section id="view-stats" class="view">
+        <div class="section-head"><div><span class="eyebrow">Überblick</span><h3>Deine Statistik</h3><p class="subtle">So entwickelt sich dein Tag.</p></div></div>
+        <div class="stats-grid" id="statsGrid"></div>
+        <div class="panel chart-panel"><div class="panel-head"><div><span class="eyebrow">Aktivität</span><h3>Letzte 7 Tage</h3></div></div><div id="barChart" class="bar-chart"></div></div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop hidden" id="taskModal">
+    <div class="modal">
+      <button class="modal-close" data-close="taskModal">×</button>
+      <span class="eyebrow">Neue Aufgabe</span><h2>Was steht an?</h2>
+      <form id="taskForm">
+        <label>Titel<input id="taskTitle" required placeholder="z. B. Sport, Lernen, Einkaufen …" /></label>
+        <div class="form-row"><label>Start<input id="taskStart" type="time" value="08:00" /></label><label>Ende<input id="taskEnd" type="time" value="09:00" /></label></div>
+        <div class="form-row"><label>Kategorie<select id="taskCategory"><option>Produktivität</option><option>Gesundheit</option><option>Privat</option><option>Arbeit</option><option>Pause</option></select></label><label>Priorität<select id="taskPriority"><option value="normal">Normal</option><option value="high">Hoch</option><option value="low">Niedrig</option></select></label></div>
+        <label class="check-row"><input id="taskTop" type="checkbox" /> Zu meinen Top 3</label>
+        <button class="primary-btn wide" type="submit">Aufgabe hinzufügen</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="habitModal">
+    <div class="modal"><button class="modal-close" data-close="habitModal">×</button><span class="eyebrow">Neue Routine</span><h2>Was willst du beibehalten?</h2><form id="habitForm"><label>Name<input id="habitName" required placeholder="z. B. 10 Minuten lesen" /></label><label>Emoji<input id="habitEmoji" maxlength="2" value="✨" /></label><button class="primary-btn wide" type="submit">Gewohnheit speichern</button></form></div>
+  </div>
+
+  <div class="modal-backdrop hidden" id="noteModal">
+    <div class="modal"><button class="modal-close" data-close="noteModal">×</button><span class="eyebrow">Neue Notiz</span><h2>Was geht dir durch den Kopf?</h2><form id="noteForm"><label>Titel<input id="noteTitle" required placeholder="z. B. Projektidee" /></label><label>Notiz<textarea id="noteBody" rows="7" placeholder="Schreib frei …"></textarea></label><button class="primary-btn wide" type="submit">Notiz speichern</button></form></div>
+  </div>
+
+  <div class="focus-overlay hidden" id="focusModal">
+    <div class="focus-card"><button class="modal-close" data-close="focusModal">×</button><span class="eyebrow">Deep Work</span><h2>Fokusmodus</h2><div class="timer" id="focusTimer">25:00</div><div class="timer-controls"><button class="icon-btn" id="focusReset">↺</button><button class="primary-btn" id="focusStart">Start</button></div><div class="timer-presets"><button data-min="15">15 min</button><button data-min="25" class="selected">25 min</button><button data-min="50">50 min</button></div></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
